@@ -11,7 +11,7 @@ export default function Resume({ user, repos = [] }) {
       color: "#111"
     }}>
       <header style={{ display: "flex", gap: 16 }}>
-        <img src={user?.avatar_url} alt="avatar" width={120} height={120} style={{ borderRadius: 8 }} />
+        <img src={user?.avatar_url} alt={`${fallbackName} GitHub profile picture`} width={120} height={120} style={{ borderRadius: 8 }} />
         <div>
           <h2 style={{ margin: 0 }}>{fallbackName}</h2>
           <div style={{ color: "#555" }}>{user?.bio}</div>
@@ -35,9 +35,9 @@ export default function Resume({ user, repos = [] }) {
                 </div>
                 <div style={{ color: "#999" }}>★ {r.stargazers_count}</div>
               </div>
-              <div style={{ color: "#555" }}>{r.description}</div>
+              <div style={{ color: "#555" }}>{r.description || "No description available"}</div>
               <div style={{ marginTop: 6, color: "#777", fontSize: 13 }}>
-                {r.language || "—"} • Updated {new Date(r.updated_at).toLocaleDateString()}
+                {r.language || "—"} • Updated {r.updated_at ? new Date(r.updated_at).toLocaleDateString() : "—"}
               </div>
             </div>
           ))}

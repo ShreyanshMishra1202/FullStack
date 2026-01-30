@@ -31,14 +31,18 @@ export default function Home() {
 
   async function exportPDF() {
     if (!resumeRef.current) return;
-    const element = resumeRef.current;
-    const canvas = await html2canvas(element, { scale: 2 });
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "pt", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`${username}-resume.pdf`);
+    try {
+      const element = resumeRef.current;
+      const canvas = await html2canvas(element, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "pt", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`${username}-resume.pdf`);
+    } catch (err) {
+      alert("Failed to export PDF: " + err.message);
+    }
   }
 
   return (
@@ -56,7 +60,11 @@ export default function Home() {
         <button onClick={() => fetchGithub(username)} style={{ marginLeft: 8, padding: "8px 12px" }}>
           Fetch
         </button>
-        <button onClick={exportPDF} style={{ marginLeft: 8, padding: "8px 12px" }}>
+        <button 
+          onClick={exportPDF} 
+          disabled={!data || data.error} 
+          style={{ marginLeft: 8, padding: "8px 12px", opacity: (!data || data.error) ? 0.5 : 1 }}
+        >
           Export PDF
         </button>
       </div>
